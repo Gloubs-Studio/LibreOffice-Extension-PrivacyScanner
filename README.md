@@ -1,0 +1,17 @@
+A LibreOffice Writer extension that allows you to detect PII. With a single click from the Tools > Add-Ons menu, the extension highlights matches according to their severity. The list of matches can be exported as a .csv file.
+
+Fields analysed:
+- metadata (Author...)
+- document text, including header/footer
+- comments
+
+PIIs:
+- emails
+- phone numbers
+- date-of-birth
+- marital status
+- credit card numbers
+- social security numbers (fr)
+- national insurance numbers (uk)
+- ipv4 addresses
+- api key / token
