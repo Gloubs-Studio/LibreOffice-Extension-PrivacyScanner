@@ -8,12 +8,12 @@ Fields analysed:
 PIIs:
 - Emails
 - Phone numbers
-- French postal addresses:
-    12 rue Victor Hugo, 33000 Bordeaux
-    12, rue Victor Hugo, 33000 Bordeaux
-    12 bis, rue Victor Hugo, 33000 Bordeaux
-      12 bis rue Victor Hugo
-      33000 Bordeaux
+- French postal addresses:\
+    12 rue Victor Hugo, 33000 Bordeaux\
+    12, rue Victor Hugo, 33000 Bordeaux\
+    12 bis, rue Victor Hugo, 33000 Bordeaux\
+      12 bis rue Victor Hugo\
+      33000 Bordeaux\
       France
 - Date-of-birth
 - Marital status
