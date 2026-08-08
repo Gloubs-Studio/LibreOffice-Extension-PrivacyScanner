@@ -4,6 +4,7 @@
 import sys
 import os
 
+
 # 1. Ensure local extension path is on sys.path
 current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
@@ -11,8 +12,8 @@ if current_dir not in sys.path:
 
 import uno
 import unohelper
-from com.sun.star.task import XJobExecutor
-from com.sun.star.lang import XServiceInfo
+from com.sun.star.task import XJobExecutor # ignore warnings about unused import; it's required for LibreOffice to recognize this as a Job service
+from com.sun.star.lang import XServiceInfo # ignore warnings about unused import; it's required for LibreOffice to recognize this as a Job service
 
 from privacy_scanner.core.engine import ScannerEngine
 from privacy_scanner.ui.dialog import ScannerDialog

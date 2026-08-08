@@ -5,71 +5,220 @@ from privacy_scanner.core.models import Issue, Severity
 
 
 class PIIScanner(BaseScanner):
-    rule_id = "pii_regex_detector"
-    category = "Sensitive Data"
+    rule_id = "pii_regex_detector" # pyright: ignore[reportAssignmentType]
+    category = "Sensitive Data" # pyright: ignore[reportAssignmentType]
 
     # Map pattern titles to compiled regexes & assigned severity levels
     PATTERNS = {
+
+        "IBAN / Bank Account": {
+            "regex": re.compile(
+                r"\b[A-Z]{2}\s*\d{2}"
+                r"(?:[\s-]*[A-Z0-9]){11,30}\b",
+                re.IGNORECASE,
+            ),
+            "severity": Severity.HIGH,
+        },
+
+        "Passport Number": {
+            "regex": re.compile(
+                r"\b(?:passport(?:\s+number|\s+no\.?)?\s*[:\-]?\s*)?"
+                r"[A-Z]{1,2}\d{6,9}\b",
+                re.IGNORECASE,
+            ),
+            "severity": Severity.HIGH,
+        },
+
+        "MAC Address": {
+            "regex": re.compile(
+                r"\b(?:[0-9A-Fa-f]{2}[:-]){5}[0-9A-Fa-f]{2}\b"
+            ),
+            "severity": Severity.MEDIUM,
+        },
+
+        "Vehicle Registration": {
+            "regex": re.compile(
+                r"\b(?:license\s+plate|licence\s+plate|"
+                r"registration(?:\s+number)?|reg(?:istration)?\.?\s+no\.?)"
+                r"\s*[:\-]?\s*[A-Z0-9][A-Z0-9\s-]{2,10}\b",
+                re.IGNORECASE,
+            ),
+            "severity": Severity.MEDIUM,
+        },
+
+        "French Postal Address": {
+            "regex": re.compile(
+                r"\b\d{1,5}"
+                r"(?:\s+(?:bis|ter|quater))?"
+                r"\s*,?\s*"
+                r"(?:rue|avenue|av\.|boulevard|bd|"
+                r"chemin|route|impasse|allée|allee|"
+                r"place|quai|cours|passage|"
+                r"faubourg|square|lotissement)"
+                r"\s+[A-Za-zÀ-ÖØ-öø-ÿ'’-]+"
+                r"(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ'’-]+)*"
+                r"\s*,?\s*"
+                r"\b\d{5}\s+"
+                r"[A-Za-zÀ-ÖØ-öø-ÿ'’-]+"
+                r"(?:\s+[A-Za-zÀ-ÖØ-öø-ÿ'’-]+)*"
+                r"(?:\s*,?\s*France)?\b",
+                re.IGNORECASE,
+            ),
+            "severity": Severity.MEDIUM,
+        },
+
+        "Person Name - Labelled": {
+            "regex": re.compile(
+                r"\b(?:"
+                r"name|first\s+name|forename|last\s+name|surname|"
+                r"prénom|nom\s+de\s+famille"
+                r")\s*[:\-]\s*"
+                r"[A-ZÀ-ÖØ-Ý][A-Za-zÀ-ÖØ-öø-ÿ'’-]+"
+                r"(?:\s+[A-ZÀ-ÖØ-Ý][A-Za-zÀ-ÖØ-öø-ÿ'’-]+){0,3}",
+                re.IGNORECASE,
+            ),
+        "severity": Severity.MEDIUM,
+        },
+        
+        "Person Name - Title": {
+            "regex": re.compile(
+                r"\b(?:Mr|Mrs|Ms|Miss|Dr|M\.|Mme|Mlle)\.?\s+"
+                r"[A-ZÀ-ÖØ-Ý][A-Za-zÀ-ÖØ-öø-ÿ'’-]+"
+                r"(?:\s+[A-ZÀ-ÖØ-Ý][A-Za-zÀ-ÖØ-öø-ÿ'’-]+){0,3}\b"
+            ),
+            "severity": Severity.MEDIUM,
+        },
+
+        "Person Name - Capitalized Surname": {
+            "regex": re.compile(
+                r"\b"
+                r"[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]+"
+                r"(?:[-'][A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]+)?"
+                r"(?:\s+"
+                r"[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]+"
+                r"(?:[-'][A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]+)?"
+                r"){0,2}"
+                r"\s+"
+                r"[A-ZÀ-ÖØ-Ý]{2,}"
+                r"(?:[-'][A-ZÀ-ÖØ-Ý]{2,})?"
+                r"\b"
+            ),
+            "severity": Severity.MEDIUM,
+        },
+
         "Date of Birth": {
-            "regex": re.compile(r'(0[1-9]|1[0-2])/(?:0[1-9]|1\d|2\d|3[01])/(\d{4})'),
+            "regex": re.compile(
+                r"\b(?:0[1-9]|[12]\d|3[01])"
+                r"(?:[\/\-]|\s+)"
+                r"(?:0[1-9]|1[0-2])"
+                r"(?:[\/\-]|\s+)"
+                r"(?:19|20)\d{2}\b"
+            ),
             "severity": Severity.LOW,
         },
+
         "Marital Status": {
             "regex": re.compile(r'(Single|Married|Divorced|Widowed)'),
             "severity": Severity.LOW,
         },
-        "Government-issued ID Number": {
-            "regex": re.compile(r'[A-Z]{2}[a-z]*\s\d{5,9}'),
-            "severity": Severity.MEDIUM,
-        },
-        "Credit Card Number": {
-            "regex": re.compile(r'(4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:017|35)[0-9]{12}|35[0-9]{14}|3[47][0-9]{13}|8[0-`^(4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|6(?:017|35)[0-9]{12}|35[0-9]{14}|3[47][0-9]{13}8[0-9]{14})'),
-            "severity": Severity.HIGH,
-        },
-        "Tax Identification Number (TIN) or VAT Number": {
-            "regex": re.compile(r'[A-Z]{2}[a-z]*[0-9]{3,9}'),
+
+        "Username": {
+            "regex": re.compile(
+                r"\b(?:username|user\s*name|login|user\s*id|"
+                r"account\s*(?:name|id))"
+                r"\s*[:=]\s*"
+                r"[A-Za-z0-9][A-Za-z0-9_.-]{2,31}\b",
+                re.IGNORECASE,
+            ),
             "severity": Severity.LOW,
         },
+
+        "Credit Card Number": {
+            "regex": re.compile(
+                r"\b(?:"
+                r"(?:\d{4}[\s-]?){3}\d{4}"
+                r"|"
+                r"\d{15,16}"
+                r")\b"
+            ),
+            "severity": Severity.HIGH,
+        },
+
+
         "Email Address": {
             "regex": re.compile(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}'),
             "severity": Severity.MEDIUM,
         },
+
         "Phone Number": {
             "regex": re.compile(
-                r'\b(?:\+\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}\b'
+                r"(?<!\d)"
+                r"(?:"
+                r"\+33(?:[\s.-]?\d){9}"
+                r"|"
+                r"0[1-9](?:[\s.-]?\d){8}"
+                r")"
+                r"(?!\d)"
             ),
             "severity": Severity.MEDIUM,
         },
-        "Phone Number (FR)": {
+
+        "French Social Security Number": {
             "regex": re.compile(
-                r'\b\d{2}[-.\s]\d{2}[-.\s]\d{2}[-.\s]\d{2}[-.\s]\d{2}\b|\b\d{2}(?:[ ]?\d{2}){4}\b'
-            ),
-            "severity": Severity.MEDIUM,
-        },
-        "Social Security Number (FR)": {
-            "regex": re.compile(
-                r'\b\d{1}[-.\s]\d{2}[-.\s]\d{2}[-.\s]\d{2}[-.\s]\d{3}[-.\s]\d{3}[-.\s]\d{2}\b'
+                r"\b[12]\s?"
+                r"\d{2}\s?"
+                r"(?:0[1-9]|1[0-2])\s?"
+                r"\d{2}\s?"
+                r"\d{3}\s?"
+                r"\d{3}\s?"
+                r"\d{2}\b"
             ),
             "severity": Severity.HIGH,
         },
+
         "IPv4 Address": {
             "regex": re.compile(r'\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'),
             "severity": Severity.MEDIUM,
         },
-        "Internal Confidential Tag": {
+
+        "Internal Confidential Tags": {
             "regex": re.compile(
                 r'\bCONFIDENTIAL\b|\bRESTRICTED\b|\bTOP SECRET\b|\bSECRET\b'
             ),
             "severity": Severity.HIGH,
         },
-        "National Insurance Number (UK)": {
+
+        "UK National Insurance Number": {
             "regex": re.compile(
-                r'\b[A-CEGHJ-PR-TW-Z]{1}[A-CEGHJ-NPR-TW-Z]{1}[0-9]{6}[A-D]{1}\b'
+                r"\b"
+                r"(?!BG|GB|NK|KN|TN|NT|ZZ)"
+                r"[A-CEGHJ-PR-TW-Z]{2}"
+                r"\s?"
+                r"\d{2}\s?"
+                r"\d{2}\s?"
+                r"\d{2}"
+                r"\s?"
+                r"[A-D]\b",
+                re.IGNORECASE,
             ),
             "severity": Severity.HIGH,
         },
+
         "API Key / Token": {
-            "regex": re.compile(r'\b[A-Za-z0-9_]{32}\b'),
+            "regex": re.compile(
+                r"\b(?:api[_-]?key|api[_-]?token|access[_-]?token|secret[_-]?key)"
+                r"\s*[:=]\s*"
+                r"[A-Za-z0-9_\-]{16,}\b",
+                re.IGNORECASE,
+            ),
+            "severity": Severity.HIGH,
+        },
+
+        "Bearer Token": {
+            "regex": re.compile(
+                r"\bBearer\s+[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\b",
+                re.IGNORECASE,
+            ),
             "severity": Severity.HIGH,
         },
     }

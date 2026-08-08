@@ -6,12 +6,11 @@ Fields analysed:
 - comments
 
 PIIs:
+- names
 - emails
 - phone numbers
 - date-of-birth
 - marital status
 - credit card numbers
 - social security numbers (fr)
-- national insurance numbers (uk)
-- ipv4 addresses
-- api key / token
+- ... and more, follow the link in the description.

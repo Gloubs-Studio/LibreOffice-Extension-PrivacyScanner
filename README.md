@@ -6,12 +6,60 @@ Fields analysed:
 - comments
 
 PIIs:
-- emails
-- phone numbers
-- date-of-birth
-- marital status
-- credit card numbers
-- social security numbers (fr)
-- national insurance numbers (uk)
-- ipv4 addresses
-- api key / token
+- Emails
+- Phone numbers
+- French postal addresses:
+    12 rue Victor Hugo, 33000 Bordeaux
+    12, rue Victor Hugo, 33000 Bordeaux
+    12 bis, rue Victor Hugo, 33000 Bordeaux
+      12 bis rue Victor Hugo
+      33000 Bordeaux
+      France
+- Date-of-birth
+- Marital status
+- Credit card numbers
+- Social security numbers (fr)
+- National insurance numbers (uk)
+- Postal addresses — hardest, so use conservative patterns.
+- IBAN / bank account numbers
+- Passport numbers (AB1234567, A12345678, AB123456)
+- MAC addresses (00:1A:2B:3C:4D:5E, 00-1A-2B-3C-4D-5E)
+- Vehicle registration plates: (label-based rather than trying to recognize all formats)
+    License plate: AB-123-CD
+    Licence plate: AB 123 CD
+    Registration: 1234 ABC
+    Registration number: AB123CD
+    Reg. No.: AB-123-CD
+- Usernames: (label-based)
+    Username: john_smith
+    User name: john.smith
+    Login: john-smith
+    User ID: john123
+    Account name: john_smith
+    Account ID: user_123
+- Ipv4 addresses
+- API key/token
+- Confidential tags: CONFIDENTIAL, RESTRICTED, SECRET, TOP SECRET
+
+Person names are detected using contextual and structural patterns:
+
+- Labelled names:
+    Name: first name second name NAME
+    First name: first name
+    Forename: first name
+    Last name: NAME
+    Surname: NAME
+
+- Names with an explicit title or salutation:
+    Mr first name second name NAME
+    Mr. first name second name NAME
+    Mrs first name second name NAME
+    Ms first name NAME
+    Dr first name NAME
+    M. first name NAME
+    Mme first name NAME
+
+- Names with an uppercase surname:
+    First NAME
+    First Second NAME
+    First Second Third NAME
