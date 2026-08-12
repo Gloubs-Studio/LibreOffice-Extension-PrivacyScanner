@@ -81,7 +81,7 @@ class PIIScanner(BaseScanner):
         
         "Person Name - Title": {
             "regex": re.compile(
-                r"\b(?:Mr|Mrs|Ms|Miss|Dr|M\.|Mme|Mlle)\.?\s+"
+                r"\b(?:Mr|Mrs|Ms|Miss|Dr|Mme|Mlle)\.?\s+"
                 r"[A-ZÀ-ÖØ-Ý][A-Za-zÀ-ÖØ-öø-ÿ'’-]+"
                 r"(?:\s+[A-ZÀ-ÖØ-Ý][A-Za-zÀ-ÖØ-öø-ÿ'’-]+){0,3}\b"
             ),
