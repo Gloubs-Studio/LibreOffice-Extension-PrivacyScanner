@@ -13,8 +13,7 @@ class PIIScanner(BaseScanner):
 
         "IBAN / Bank Account": {
             "regex": re.compile(
-                r"\b[A-Z]{2}\s*\d{2}"
-                r"(?:[\s-]*[A-Z0-9]){11,30}\b",
+                r"\b[A-Z]{2}\d{2}(?:\s?[A-Z0-9]{4}){3,7}(?:\s?[A-Z0-9]{1,4})?\b",
                 re.IGNORECASE,
             ),
             "severity": Severity.HIGH,
@@ -89,23 +88,6 @@ class PIIScanner(BaseScanner):
             "severity": Severity.MEDIUM,
         },
 
-        "Person Name - Capitalized Surname": {
-            "regex": re.compile(
-                r"\b"
-                r"[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]+"
-                r"(?:[-'][A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]+)?"
-                r"(?:\s+"
-                r"[A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]+"
-                r"(?:[-'][A-ZÀ-ÖØ-Ý][a-zà-öø-ÿ]+)?"
-                r"){0,2}"
-                r"\s+"
-                r"[A-ZÀ-ÖØ-Ý]{2,}"
-                r"(?:[-'][A-ZÀ-ÖØ-Ý]{2,})?"
-                r"\b"
-            ),
-            "severity": Severity.MEDIUM,
-        },
-
         "Date of Birth": {
             "regex": re.compile(
                 r"\b(?:0[1-9]|[12]\d|3[01])"
@@ -118,7 +100,7 @@ class PIIScanner(BaseScanner):
         },
 
         "Marital Status": {
-            "regex": re.compile(r'(Single|Married|Divorced|Widowed)'),
+            "regex": re.compile(r'(Married|Divorced|Widowed)'),
             "severity": Severity.LOW,
         },
 

@@ -6,11 +6,9 @@ Fields analysed:
 - comments
 
 PIIs:
-- names
 - emails
 - phone numbers
 - date-of-birth
-- marital status
 - credit card numbers
 - social security numbers (fr)
 - ... and more, follow the link in the description.
