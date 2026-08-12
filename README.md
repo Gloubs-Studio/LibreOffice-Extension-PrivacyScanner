@@ -39,7 +39,6 @@ PIIs:
     Account ID: user_123
 - Ipv4 addresses
 - API key/token
-<<<<<<< HEAD
 - Confidential tags: CONFIDENTIAL, RESTRICTED, SECRET, TOP SECRET
 
 Person names are detected using contextual and structural patterns:
@@ -64,6 +63,3 @@ Person names are detected using contextual and structural patterns:
     First NAME
     First Second NAME
     First Second Third NAME
-=======
-- Confidential tags: CONFIDENTIAL, RESTRICTED, SECRET, TOP SECRET
->>>>>>> b06dac0 (Update - detection fixes)
